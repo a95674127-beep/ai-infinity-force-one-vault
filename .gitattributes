@@ -1,0 +1,10 @@
+# Force GitHub Linguist to exclude non-Rust/generated content from
+# language statistics so the repo's detected language reflects the Rust
+# source, not any HTML, vendored assets, or docs sitting alongside it.
+
+*.html linguist-vendored
+*.htm linguist-vendored
+docs/** linguist-documentation
+vendor/** linguist-vendored
+*.min.js linguist-generated
+*.lock linguist-generated
