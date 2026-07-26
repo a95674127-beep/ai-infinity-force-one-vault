@@ -1,0 +1,20 @@
+# Rust build output
+/target
+**/*.rs.bk
+*.pdb
+
+# Editor/OS cruft
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets — never commit real key material, envs, or vault data
+.env
+.env.*
+*.pem
+*.key
+*.p12
+secrets/
+vault-data/
+*.sqlite
+*.sqlite3
