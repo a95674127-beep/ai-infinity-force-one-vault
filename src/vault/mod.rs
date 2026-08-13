@@ -4,3 +4,4 @@
 //! policy (access control), and audit (tamper-evident logging).
 
 pub mod crypto;
+pub mod policy;
