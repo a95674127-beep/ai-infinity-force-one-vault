@@ -1,0 +1,28 @@
+[package]
+name = "ai-infinity-force-one-vault"
+version = "0.1.0"
+edition = "2021"
+authors = ["Allen Mack"]
+description = "Security vault engine for AI Infinity Force One — envelope encryption, zero-trust policy, hash-chained audit log."
+license = "UNLICENSED"
+
+[lib]
+name = "forceone_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "forceone"
+path = "src/main.rs"
+
+[dependencies]
+argon2 = "0.5"
+chacha20poly1305 = "0.10"
+getrandom = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+hmac = "0.12"
+sha2 = "0.10"
+
+[profile.release]
+opt-level = 3
+lto = true
