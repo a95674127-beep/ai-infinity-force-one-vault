@@ -40,14 +40,6 @@ jobs:
         with:
           key: ${{ matrix.platform.target }}
 
-      - name: Determine package name from Cargo.toml
-        id: meta
-        shell: bash
-        run: |
-          NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].name')
-          echo "Detected package name: $NAME"
-          echo "name=$NAME" >> "$GITHUB_OUTPUT"
-
       - name: Build Release Binary
         run: cargo build --release --target ${{ matrix.platform.target }}
 
@@ -55,7 +47,7 @@ jobs:
         id: bin
         shell: bash
         run: |
-          BIN="${{ steps.meta.outputs.name }}"
+          BIN="ai-infinity-force-one"
           if [[ "${{ matrix.platform.os }}" == "windows-latest" ]]; then
             BIN="${BIN}.exe"
           fi
