@@ -103,3 +103,19 @@ mod tests {
 
     #[test]
     fn allows_store_and_retrieve_with_grant() {
+let mut vault = Vault::new();
+        let alice = Principal("alice".into());
+        let secret = Resource("secret1".into());
+
+        vault.grant(policy::Rule {
+            principal: alice.clone(),
+            resource: secret.clone(),
+            actions: vec![Action::Write, Action::Read],
+        });
+
+        let ciphertext = vault.store(&alice, &secret, b"hello vault", b"passphrase").unwrap();
+        let plaintext = vault.retrieve(&alice, &secret, &ciphertext, b"passphrase").unwrap();
+
+        assert_eq!(plaintext, b"hello vault");
+    }
+        }
