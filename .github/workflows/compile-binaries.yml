@@ -56,4 +56,14 @@ jobs:
         shell: bash
         run: |
           BIN="${{ steps.meta.outputs.name }}"
-          if [[ "${{ matrix.platform.os }}" == "windo
+          if [[ "${{ matrix.platform.os }}" == "windows-latest" ]]; then
+            BIN="${BIN}.exe"
+          fi
+          echo "Resolved binary name: $BIN"
+          echo "bin=$BIN" >> "$GITHUB_OUTPUT"
+
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-infinity-${{ matrix.platform.name }}
+          path: target/${{ matrix.platform.target }}/release/${{ steps.bin.outputs.bin }}
