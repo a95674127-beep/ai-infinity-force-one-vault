@@ -11,7 +11,7 @@ name = "forceone_core"
 path = "src/lib.rs"
 
 [[bin]]
-name = "forceone"
+name = "ai-infinity-force-one"
 path = "src/main.rs"
 
 [dependencies]
