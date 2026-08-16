@@ -4,3 +4,4 @@
 //! as modules are added back, detection and other core components.
 
 pub mod vault;
+pub mod ingest;
