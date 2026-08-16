@@ -1,0 +1,9 @@
+# AI Infinity Force One — Known-Bad SHA-256 Hash Blocklist
+# Format: one lowercase SHA-256 hex hash per line
+# Lines starting with # are comments and are ignored by the loader
+# Source: manually curated + periodic pulls from public malware hash feeds (e.g. MalwareBazaar)
+# Last updated: 2026-08-16
+
+# --- Example placeholder entries (replace with real hashes) ---
+275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
