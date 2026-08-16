@@ -6,3 +6,4 @@
 pub mod vault;
 pub mod ingest;
 pub mod sandbox;
+pub mod detection;
