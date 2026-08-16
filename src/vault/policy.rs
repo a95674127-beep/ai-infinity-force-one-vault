@@ -45,7 +45,7 @@ impl AccessPolicy {
     pub fn grant(&mut self, rule: Rule) {
         self.rules
             .entry((rule.principal, rule.resource))
-            .or_insert_with(Vec::new)
+            .or_default()
             .extend(rule.actions);
     }
 
