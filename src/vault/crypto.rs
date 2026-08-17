@@ -51,7 +51,7 @@ pub fn encrypt(plaintext: &[u8], passphrase: &[u8]) -> Result<Vec<u8>, CryptoErr
     getrandom::getrandom(&mut salt)
         .map_err(|e| CryptoError::Encryption(e.to_string()))?;
 
-    let key_bytes = derive_key(passphrase, &salt)?;
+    let mut key_bytes = derive_key(passphrase, &salt)?;
     let key = Key::from_slice(&key_bytes);
     let cipher = XChaCha20Poly1305::new(key);
 
@@ -64,7 +64,7 @@ pub fn encrypt(plaintext: &[u8], passphrase: &[u8]) -> Result<Vec<u8>, CryptoErr
     envelope.extend_from_slice(&salt);
     envelope.extend_from_slice(&nonce);
     envelope.extend_from_slice(&ciphertext);
-    Ok(envelope)
+    key_bytes.zeroize();Ok(envelope)
 }
 
 pub fn decrypt(envelope: &[u8], passphrase: &[u8]) -> Result<Vec<u8>, CryptoError> {
@@ -78,14 +78,17 @@ pub fn decrypt(envelope: &[u8], passphrase: &[u8]) -> Result<Vec<u8>, CryptoErro
     let nonce_bytes = &envelope[SALT_LEN..SALT_LEN + 24];
     let ciphertext = &envelope[SALT_LEN + 24..];
 
-    let key_bytes = derive_key(passphrase, salt)?;
+    let mut key_bytes = derive_key(passphrase, salt)?;
     let key = Key::from_slice(&key_bytes);
     let cipher = XChaCha20Poly1305::new(key);
     let nonce = XNonce::from_slice(nonce_bytes);
 
-    cipher
-        .decrypt(nonce, ciphertext)
-        .map_err(|e| CryptoError::Decryption(e.to_string()))
+    
+    let result = cipher
+    .decrypt(nonce, ciphertext)
+    .map_err(|e| CryptoError::Decryption(e.to_string()));
+key_bytes.zeroize();
+result     
 }
 
 #[cfg(test)]
