@@ -23,6 +23,7 @@ serde_json = "1"
 hmac = "0.12"
 sha2 = "0.10"
 yara = "0.29"
+zeroize = { version = "1", features = ["derive"] }
 [profile.release]
 opt-level = 3
 lto = true
