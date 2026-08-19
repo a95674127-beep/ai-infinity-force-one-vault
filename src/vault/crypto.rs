@@ -11,6 +11,7 @@ use chacha20poly1305::{
     aead::{Aead, AeadCore, KeyInit, OsRng},
     XChaCha20Poly1305, XNonce, Key,
 };
+use zeroize::Zeroize;
 
 const SALT_LEN: usize = 16;
 
