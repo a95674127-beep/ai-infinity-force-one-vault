@@ -43,12 +43,20 @@ impl Vault {
         passphrase: &[u8],
     ) -> Result<Vec<u8>, VaultError> {
         let decision = self.policy.evaluate(principal, resource, Action::Write);
-        self.audit.append(&principal.0, &format!("store:{}", resource.0));
 
-        match decision {
-            Decision::Deny => Err(VaultError::AccessDenied),
-            Decision::Allow => {
-                crypto::encrypt(plaintext, passphrase).map_err(VaultError::Crypto)
+        if decision == Decision::Deny {
+            self.audit.append(&principal.0, &format!("store.denied:{}", resource.0));
+            return Err(VaultError::AccessDenied);
+        }
+
+        match crypto::encrypt(plaintext, passphrase) {
+            Ok(envelope) => {
+                self.audit.append(&principal.0, &format!("store.success:{}", resource.0));
+                Ok(envelope)
+            }
+            Err(e) => {
+                self.audit.append(&principal.0, &format!("store.crypto_failed:{}", resource.0));
+                Err(VaultError::Crypto(e))
             }
         }
     }
@@ -61,12 +69,20 @@ impl Vault {
         passphrase: &[u8],
     ) -> Result<Vec<u8>, VaultError> {
         let decision = self.policy.evaluate(principal, resource, Action::Read);
-        self.audit.append(&principal.0, &format!("retrieve:{}", resource.0));
 
-        match decision {
-            Decision::Deny => Err(VaultError::AccessDenied),
-            Decision::Allow => {
-                crypto::decrypt(envelope, passphrase).map_err(VaultError::Crypto)
+        if decision == Decision::Deny {
+            self.audit.append(&principal.0, &format!("retrieve.denied:{}", resource.0));
+            return Err(VaultError::AccessDenied);
+        }
+
+        match crypto::decrypt(envelope, passphrase) {
+            Ok(plaintext) => {
+                self.audit.append(&principal.0, &format!("retrieve.success:{}", resource.0));
+                Ok(plaintext)
+            }
+            Err(e) => {
+                self.audit.append(&principal.0, &format!("retrieve.crypto_failed:{}", resource.0));
+                Err(VaultError::Crypto(e))
             }
         }
     }
@@ -103,7 +119,7 @@ mod tests {
 
     #[test]
     fn allows_store_and_retrieve_with_grant() {
-let mut vault = Vault::new();
+        let mut vault = Vault::new();
         let alice = Principal("alice".into());
         let secret = Resource("secret1".into());
 
@@ -118,4 +134,4 @@ let mut vault = Vault::new();
 
         assert_eq!(plaintext, b"hello vault");
     }
-        }
+}
