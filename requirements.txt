@@ -1,0 +1,2 @@
+# No external dependencies yet — mack_sandbox.py uses only the Python standard library.
+# Add packages here as the project grows (e.g. pytest for testing).
