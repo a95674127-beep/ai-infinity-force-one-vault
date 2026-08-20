@@ -1,0 +1,27 @@
+name: MACK Stack CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify ledger integrity
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'python')
+          from mack_stack.mack_sandbox import get_ledger
+          result = get_ledger().verify()
+          print(result)
+          if not result['valid']:
+              sys.exit(1)
+          "
