@@ -23,6 +23,15 @@ impl HashBlocklist {
         Ok(Self { known_bad })
     }
 
+pub fn load_from_str(content: &str) -> Self {
+        let known_bad = content
+            .lines()
+            .map(|l| l.trim().to_lowercase())
+            .filter(|l| !l.is_empty() && !l.starts_with('#'))
+            .collect();
+        Self { known_bad }
+    }
+
     pub fn scan_payload(&self, data: &[u8]) -> BlocklistVerdict {
         let mut hasher = Sha256::new();
         hasher.update(data);
