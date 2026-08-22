@@ -48,11 +48,28 @@ pub fn load_from_str(content: &str) -> Self {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
+#[test]
     fn detects_known_hash() {
         let mut set = HashSet::new();
-        let mut hasher = Sh
+        let mut hasher = Sha256::new();
+        hasher.update(b"malicious payload");
+        let hash = format!("{:x}", hasher.finalize());
+        set.insert(hash.clone());
+
+        let bl = HashBlocklist { known_bad: set };
+        match bl.scan_payload(b"malicious payload") {
+            BlocklistVerdict::Match(h) => assert_eq!(h, hash),
+            _ => panic!("expected match"),
+        }
+    }
+
+    #[test]
+    fn clean_payload_is_not_matched() {
+        let bl = HashBlocklist::load_from_str("");
+        match bl.scan_payload(b"harmless data") {
+            BlocklistVerdict::Clean => {}
+            _ => panic!("expected clean"),
         }
     }
 }
+    
