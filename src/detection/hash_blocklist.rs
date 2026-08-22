@@ -43,15 +43,7 @@ mod tests {
     #[test]
     fn detects_known_hash() {
         let mut set = HashSet::new();
-        let mut hasher = Sha256::new();
-        hasher.update(b"malicious payload");
-        let hash = format!("{:x}", hasher.finalize());
-        set.insert(hash.clone());
-
-        let bl = HashBlocklist { known_bad: set };
-        match bl.scan_payload(b"malicious payload") {
-            BlocklistVerdict::Match(h) => assert_eq!(h, hash),
-            _ => panic!("expected match"),
+        let mut hasher = Sh
         }
     }
 }
