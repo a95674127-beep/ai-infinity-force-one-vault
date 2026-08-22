@@ -54,4 +54,5 @@ jobs:
         with:
           name: ai-infinity-${{ matrix.platform.name }}
           path: target/${{ matrix.platform.target }}/release/${{ steps.bin.outputs.bin }}
+
           
