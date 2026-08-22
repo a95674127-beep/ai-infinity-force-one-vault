@@ -165,7 +165,14 @@ mod tests {
         let alice = Principal("alice".into());
         let secret = Resource("secret1".into());
 
+        vault.grant(policy::Rule {
+            principal: alice.clone(),
+            resource: secret.clone(),
+            actions: vec![Action::Write, Action::Read],
+        });
+
         let result = vault.store(&alice, &secret, b"malicious_test_payload", b"pass");
         assert!(matches!(result, Err(VaultError::DetectionBlocked(_))));
         assert_eq!(vault.audit_len(), 1);
-    }}
+    }
+}
