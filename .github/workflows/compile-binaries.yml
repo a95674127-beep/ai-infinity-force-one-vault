@@ -1,4 +1,4 @@
-Name: Compile Binaries
+name: Compile Binaries
 
 on:
   push:
