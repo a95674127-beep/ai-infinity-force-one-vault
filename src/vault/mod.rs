@@ -159,4 +159,13 @@ mod tests {
 
         assert_eq!(plaintext, b"hello vault");
     }
-}
+#[test]
+    fn rejects_store_with_blocklisted_payload() {
+        let mut vault = Vault::new();
+        let alice = Principal("alice".into());
+        let secret = Resource("secret1".into());
+
+        let result = vault.store(&alice, &secret, b"malicious_test_payload", b"pass");
+        assert!(matches!(result, Err(VaultError::DetectionBlocked(_))));
+        assert_eq!(vault.audit_len(), 1);
+    }}
